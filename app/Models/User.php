@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -41,4 +43,22 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function conversations () : BelongsToMany
+    {
+        return $this
+            ->belongsToMany(Conversation::class, 'participants')
+            ->withPivot('joined_at', 'role');
+    }
+
+    public function sentMessages () : HasMany
+    {
+       return $this->hasMany(Message::class, 'user_id', 'id');
+    }
+
+    public function receivedMessages () :BelongsToMany
+    {
+        return $this->belongsToMany(Message::class, 'recipients')
+            ->withPivot('read_at', 'deleted_at');
+    }
 }
