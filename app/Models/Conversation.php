@@ -15,6 +15,7 @@ class Conversation extends Model
     protected $fillable = [
         'user_id',
         'label',
+        'type',
         'last_message_id'
     ];
 
