@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageCreated;
 use App\Models\Conversation;
 use App\Models\Recipient;
 use App\Models\User;
@@ -43,7 +44,8 @@ class MessagesController extends Controller
             ],
         ]);
 
-        $user = Auth::user();
+          $user = Auth::user();
+//        $user = User::find(1);
 
         $conversation_id = $request->post('conversation_id');
         $user_id = $request->post('user_id');
@@ -97,6 +99,8 @@ class MessagesController extends Controller
             ]);
 
             DB::commit();
+
+            broadcast(new MessageCreated($message));
 
         }
         catch (Throwable $e) {
