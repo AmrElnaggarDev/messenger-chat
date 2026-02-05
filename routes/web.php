@@ -15,9 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{id?}', [MessengerController::class, 'index'] )
-    ->middleware('auth')
-->name('messenger');
+
+
+
+
+
+//// Home redirects based on auth
+//Route::get('/', function () {
+//    return auth()->check()
+//        ? redirect()->route('messenger')
+//        : redirect()->route('login');
+//});
+
+
 
 
 Route::get('/dashboard', function () {
@@ -31,3 +41,7 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/{id?}', [MessengerController::class, 'index'] )
+    ->middleware('auth')
+    ->name('messenger');

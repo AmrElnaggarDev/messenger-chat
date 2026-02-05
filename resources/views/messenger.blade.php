@@ -1762,7 +1762,7 @@
                 <!-- Chat: Content -->
                 <div class="chat-body hide-scrollbar flex-1 h-100">
                     <div class="chat-body-inner">
-                        <div class="py-6 py-lg-12">
+                        <div class="py-6 py-lg-12" id="chat-body">
 
                            @foreach($messages as $message)
                                 <!-- Message -->
@@ -1848,7 +1848,9 @@
                     <!-- Chat: Files -->
 
                     <!-- Chat: Form -->
-                    <form class="chat-form rounded-pill bg-dark" data-emoji-form="">
+                    <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="{{route('api.messages.store')}}">
+                        @csrf
+                        <input type="hidden" name="conversation_id" value="{{$activeChat->id}}">
                         <div class="row align-items-center gx-0">
                             <div class="col-auto">
                                 <a href="#" class="btn btn-icon btn-link text-body rounded-circle" id="dz-btn">
@@ -1858,7 +1860,7 @@
 
                             <div class="col">
                                 <div class="input-group">
-                                    <textarea class="form-control px-0" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
+                                    <textarea class="form-control px-0" name="message" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
 
                                     <a href="#" class="input-group-text text-body pe-0" data-emoji-btn="">
                                                 <span class="icon icon-lg">
@@ -3469,5 +3471,28 @@
 <!-- Scripts -->
 <script src="{{asset('assets/js/vendor.js')}}"></script>
 <script src="{{asset('assets/js/template.js')}}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{{asset('js/messenger.js')}}"></script>
+
+<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
+
+<script>
+// Enable pusher logging - don't include this in production
+Pusher.logToConsole = true;
+const userId = "{{Auth::id()}}";
+
+var pusher = new Pusher('b1784b1b99e4d8e19b15', {
+  cluster: 'ap2',
+    authEndpoint: "/broadcasting/auth",
+});
+
+var channel = pusher.subscribe(`presence-Messenger.${userId}`);
+channel.bind('new-message', function(data) {
+    addMessage(data.message.body);
+});
+
+
+
+</script>
 </body>
 </html>
