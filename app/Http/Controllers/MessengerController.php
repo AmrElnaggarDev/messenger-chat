@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,14 +24,17 @@ class MessengerController extends Controller
         ])->get();
 
         $messages = [];
+        $activeChat = new Conversation();
         if ($id) {
-            $chat = $chats->where('id', $id)->first();
-            $messages = $chat->messages()->with('user')->paginate();
+            $activeChat = $chats->where('id', $id)->first();
+            $messages = $activeChat->messages()->with('user')->paginate();
         }
+
 
         return view('messenger',[
             'friends' => $friends,
             'chats' => $chats,
+            'activeChat' => $activeChat,
             'messages' => $messages,
         ]);
     }
