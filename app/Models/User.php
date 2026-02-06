@@ -44,6 +44,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    protected $appends = [
+        'avatar_url',
+    ];
+
     public function conversations () : BelongsToMany
     {
         return $this
@@ -61,5 +65,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Message::class, 'recipients')
             ->withPivot('read_at', 'deleted_at');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=' .$this->name;
     }
 }

@@ -18,9 +18,16 @@ class MessagesController extends Controller
     public function index($id)
     {
         $user = Auth::user();
-        $conversations = $user->conversations()->findOrFail($id);
+        $conversation = $user->conversations()
+            ->with(['participants' => function ($query) use ($user) {
+                $query->where('id', '<>', $user->id);
+            }])
+            ->findOrFail($id);
 
-        $messages = $conversations->messages()->paginate();
+        return [
+            'conversation' => $conversation,
+            'messages' =>  $conversation->messages()->with('user')->paginate()
+        ];
     }
 
 
@@ -100,6 +107,7 @@ class MessagesController extends Controller
 
             DB::commit();
 
+            $message->load('user');
             broadcast(new MessageCreated($message));
 
         }
