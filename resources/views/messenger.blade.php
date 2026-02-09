@@ -21,6 +21,10 @@
 </head>
 
 <body>
+
+<div id="chat-app">
+
+
 <!-- Layout -->
 <div class="layout overflow-hidden">
     <!-- Navigation -->
@@ -1633,162 +1637,7 @@
     </aside>
     <!-- Sidebar -->
 
-    <!-- Chat -->
-    <main class="main is-visible" data-dropzone-area="">
-        <div class="container h-100">
-
-            <div class="d-flex flex-column h-100 position-relative">
-                <!-- Chat: Header -->
-                <div class="chat-header border-bottom py-4 py-lg-7">
-                    <div class="row align-items-center">
-
-                        <!-- Mobile: close -->
-                        <div class="col-2 d-xl-none">
-                            <a class="icon icon-lg text-muted" href="#" data-toggle-chat="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                            </a>
-                        </div>
-                        <!-- Mobile: close -->
-
-                        <!-- Content -->
-                        <div class="col-8 col-xl-12">
-                            <div class="row align-items-center text-center text-xl-start">
-                                <!-- Title -->
-                                <div class="col-12 col-xl-6">
-                                    <div class="row align-items-center gx-5">
-                                        <div class="col-auto">
-                                            <div class="avatar d-none d-xl-inline-block">
-                                                <img class="avatar-img" id="chat-avatar" src="assets/img/avatars/bootstrap.svg" alt="">
-                                            </div>
-                                        </div>
-
-                                        <div class="col overflow-hidden">
-                                            <h5 class="text-truncate" id="chat-name"></h5>
-                                            <p class="text-truncate d-none">35 members, 3 online</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Title -->
-
-                                <!-- Toolbar -->
-                                <div class="col-xl-6 d-none d-xl-block">
-                                    <div class="row align-items-center justify-content-end gx-6">
-                                        <div class="col-auto">
-                                            <a href="#" class="icon icon-lg text-muted" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-more-group" aria-controls="offcanvas-more-group">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
-                                            </a>
-                                        </div>
-
-                                        <div class="col-auto">
-                                            <div class="avatar-group">
-                                                <a href="#" class="avatar avatar-sm" data-bs-toggle="modal" data-bs-target="#modal-user-profile">
-                                                    <img class="avatar-img" src="assets/img/avatars/1.jpg" alt="#">
-                                                </a>
-
-                                                <a href="#" class="avatar avatar-sm" data-bs-toggle="modal" data-bs-target="#modal-user-profile">
-                                                    <img class="avatar-img" src="assets/img/avatars/11.jpg" alt="#">
-                                                </a>
-
-                                                <a href="#" class="avatar avatar-sm" data-bs-toggle="modal" data-bs-target="#modal-user-profile">
-                                                    <img class="avatar-img" src="assets/img/avatars/7.jpg" alt="#">
-                                                </a>
-
-                                                <a href="#" class="avatar avatar-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-add-members" aria-controls="offcanvas-add-members">
-                                                            <span class="avatar-text" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<strong>Add People</strong><p>Invite friends to group</p>">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                                                            </span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Toolbar -->
-                            </div>
-                        </div>
-                        <!-- Content -->
-
-                        <!-- Mobile: more -->
-                        <div class="col-2 d-xl-none text-end">
-                            <div class="dropdown">
-                                <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <div class="icon icon-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-                                    </div>
-                                </a>
-
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-add-members" aria-controls="offcanvas-add-members">Add members</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvas-more-group" aria-controls="offcanvas-more-group">More</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- Mobile: more -->
-
-                    </div>
-                </div>
-                <!-- Chat: Header -->
-
-                <!-- Chat: Content -->
-                <div class="chat-body hide-scrollbar flex-1 h-100">
-                    <div class="chat-body-inner">
-                        <div class="py-6 py-lg-12" id="chat-body">
-
-
-
-                        </div>
-                    </div>
-                </div>
-                <!-- Chat: Content -->
-
-                <!-- Chat: Footer -->
-                <div class="chat-footer pb-3 pb-lg-7 position-absolute bottom-0 start-0">
-                    <!-- Chat: Files -->
-                    <div class="dz-preview bg-dark" id="dz-preview-row" data-horizontal-scroll="">
-                    </div>
-                    <!-- Chat: Files -->
-
-                    <!-- Chat: Form -->
-                    <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="{{route('api.messages.store')}}">
-                        @csrf
-                        <input type="hidden" name="conversation_id" value="">
-                        <div class="row align-items-center gx-0">
-                            <div class="col-auto">
-                                <a href="#" class="btn btn-icon btn-link text-body rounded-circle" id="dz-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-paperclip"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                                </a>
-                            </div>
-
-                            <div class="col">
-                                <div class="input-group">
-                                    <textarea class="form-control px-0" name="message" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
-
-                                    <a href="#" class="input-group-text text-body pe-0" data-emoji-btn="">
-                                                <span class="icon icon-lg">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-smile"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
-                                                </span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="col-auto">
-                                <button class="btn btn-icon btn-primary rounded-circle ms-5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-send"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <!-- Chat: Form -->
-                </div>
-                <!-- Chat: Footer -->
-            </div>
-
-        </div>
-    </main>
-    <!-- Chat -->
+    <Messenger />
 
     <!-- Chat: Info -->
     <div class="offcanvas offcanvas-end offcanvas-aside" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvas-more-group">
@@ -3372,19 +3221,28 @@
     </div>
 </div>
 
+</div>
+
 <!-- Scripts -->
 <script src="{{asset('assets/js/vendor.js')}}"></script>
 <script src="{{asset('assets/js/template.js')}}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="{{asset('js/moment.js')}}"></script>
-<script src="{{asset('js/messenger.js')}}"></script>
+<script src="{{asset('js/manifest.js')}}"></script>
+<script src="{{asset('js/vendor.js')}}"></script>
+<script src="{{asset('js/messages.js')}}"></script>
+<script>
+    const userId = "{{Auth::id()}}";
+    const csrf_token = "{{csrf_token()}}";
+</script>
+
+{{--
 
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 
 <script>
 // Enable pusher logging - don't include this in production
 Pusher.logToConsole = true;
-const userId = "{{Auth::id()}}";
 
 var pusher = new Pusher('b1784b1b99e4d8e19b15', {
   cluster: 'ap2',
@@ -3397,7 +3255,9 @@ channel.bind('new-message', function(data) {
 });
 
 
-
 </script>
+--}}
+
+
 </body>
 </html>
