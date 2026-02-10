@@ -3204,11 +3204,12 @@
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('js/manifest.js')}}"></script>
 <script src="{{asset('js/vendor.js')}}"></script>
-<script src="{{asset('js/messages.js')}}"></script>
 <script>
     const userId = "{{Auth::id()}}";
     const csrf_token = "{{csrf_token()}}";
 </script>
+<script src="{{asset('js/messages.js')}}"></script>
+
 
 {{--
 
