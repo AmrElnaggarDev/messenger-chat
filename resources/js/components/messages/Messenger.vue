@@ -5,15 +5,15 @@
 
             <div class="d-flex flex-column h-100 position-relative">
                 <!-- Chat: Header -->
-                <ChatHeader />
+                <ChatHeader :conversation="conversation"/>
                 <!-- Chat: Header -->
 
                 <!-- Chat: Content -->
-                <ChatContent />
+                <ChatContent :messages="messages" />
                 <!-- Chat: Content -->
 
                 <!-- Chat: Footer -->
-                <ChatFooter />
+                <ChatFooter :conversation="conversation"/>
                 <!-- Chat: Footer -->
             </div>
 
@@ -30,6 +30,11 @@ import ChatFooter from "./ChatFooter.vue";
 export default  {
     components: {
         ChatHeader, ChatContent, ChatFooter,
-    }
+    },
+    props: [
+        "conversation", "messages"
+    ],
+
+
 }
 </script>
