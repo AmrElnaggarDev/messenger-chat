@@ -18,12 +18,12 @@
                         <div class="row align-items-center gx-5">
                             <div class="col-auto">
                                 <div class="avatar d-none d-xl-inline-block">
-                                    <img class="avatar-img" id="chat-avatar" src="assets/img/avatars/bootstrap.svg" alt="">
+                                    <img class="avatar-img" id="chat-avatar" v-bind:src="conversation? conversation.participants[0].avatar_url : ''" alt="">
                                 </div>
                             </div>
 
                             <div class="col overflow-hidden">
-                                <h5 class="text-truncate" id="chat-name"></h5>
+                                <h5 class="text-truncate" id="chat-name">{{conversation? conversation.participants[0].name : ''}}</h5>
                                 <p class="text-truncate d-none">35 members, 3 online</p>
                             </div>
                         </div>
@@ -95,6 +95,8 @@
 
 <script  >
 export default {
-
+    props: [
+        "conversation"
+    ]
 }
 </script>
