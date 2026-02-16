@@ -74,8 +74,8 @@ export default {
     ],
     data() {
         return {
+            fetched: 0,
             messages: [],
-            fetched: 0
         }
     },
 
@@ -84,7 +84,7 @@ export default {
             fetch(`/api/conversations/${this.conversation.id}/messages`)
                 .then(response => response.json())
                 .then(json => {
-                    this.messages = json.messages.data;
+                    this.messages = json.messages.data.reverse();
                 });
         }
 
@@ -96,7 +96,7 @@ export default {
             fetch(`/api/conversations/${this.conversation.id}/messages`)
                 .then(response => response.json())
                 .then(json => {
-                    this.messages = json.messages.data;
+                    this.messages = json.messages.data.reverse();
                     this.fetched = this.conversation.id;
                 });
         }

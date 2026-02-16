@@ -671,7 +671,7 @@
                 <div class="d-flex flex-column h-100 position-relative">
                     <div class="hide-scrollbar">
 
-                        <chat-list />
+                        <chat-list/>
                     </div>
                 </div>
             </div>
@@ -1611,7 +1611,7 @@
     </aside>
     <!-- Sidebar -->
 
-    <Messenger  :conversation="conversation" :messages="messages"/>
+    <Messenger  :conversation="conversation" />
 
     <!-- Chat: Info -->
     <div class="offcanvas offcanvas-end offcanvas-aside" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvas-more-group">
