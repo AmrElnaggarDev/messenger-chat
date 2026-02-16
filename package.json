@@ -1,29 +1,30 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
+        "dev": "mix",
         "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
+        "prod": "mix --production"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
-        "alpinejs": "^3.4.2",
-        "autoprefixer": "^10.4.2",
-        "axios": "^0.25",
+        "@vue/compiler-sfc": "^3.5.28",
+        "@vue/reactivity": "^3.5.28",
+        "@vue/runtime-core": "^3.5.28",
+        "@vue/runtime-dom": "^3.5.28",
+        "alpinejs": "^3.10.2",
+        "axios": "^1.1.2",
+        "buffer": "^6.0.3",
+        "constants-browserify": "^1.0.0",
+        "crypto-browserify": "^3.12.1",
         "laravel-mix": "^6.0.49",
-        "lodash": "^4.17.19",
-        "postcss": "^8.4.6",
+        "os-browserify": "^0.3.0",
+        "path-browserify": "^1.0.1",
+        "postcss": "^8.4.0",
+        "process": "^0.11.10",
+        "stream-browserify": "^3.0.0",
+        "string-replace-loader": "^3.3.0",
         "tailwindcss": "^3.1.0",
-        "vue": "^3.2.4",
-        "vue-loader": "^16.8.3",
-        "@vue/compiler-sfc": "^3.2.4"
-    },
-    "dependencies": {
-        "laravel-echo": "^2.3.0",
-        "pusher-js": "^8.4.0"
+        "vue": "^3.5.28",
+        "vue-loader": "^17.4.2"
     }
 }

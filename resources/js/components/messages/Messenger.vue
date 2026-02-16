@@ -32,8 +32,13 @@ export default  {
         ChatHeader, ChatContent, ChatFooter,
     },
     props: [
-        "conversation", "messages"
+        "conversation",
     ],
+    data() {
+        return {
+            messages: []
+        };
+    }
 
 
 }

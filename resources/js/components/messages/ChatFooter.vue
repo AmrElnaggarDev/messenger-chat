@@ -6,9 +6,9 @@
         <!-- Chat: Files -->
 
         <!-- Chat: Form -->
-        <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="/api/messages">
-            <input type="hidden" name="_token" :value="csrf_token">
-            <input type="hidden" name="conversation_id" value="">
+        <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="/api/messages" @submit.prevent="sendMessage()">
+            <input type="hidden" name="_token" :value="$root.csrfToken">
+            <input type="hidden" name="conversation_id" :value="conversation? conversation.id : 0">
             <div class="row align-items-center gx-0">
                 <div class="col-auto">
                     <a href="#" class="btn btn-icon btn-link text-body rounded-circle" id="dz-btn">
@@ -18,7 +18,7 @@
 
                 <div class="col">
                     <div class="input-group">
-                        <textarea class="form-control px-0" name="message" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
+                        <textarea class="form-control px-0" name="message" v-model="message" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
 
                         <a href="#" class="input-group-text text-body pe-0" data-emoji-btn="">
                                                 <span class="icon icon-lg">
@@ -41,7 +41,42 @@
 
 
 <script  >
+
+
 export default {
+    props: [
+        "conversation"
+    ],
+
+    data() {
+        return {
+            message: ""
+        }
+    },
+    methods: {
+        sendMessage() {
+
+            let data = {
+                conversation_id: this.conversation.id,
+                message: this.message,
+                _token: this.$root.csrfToken,
+            }
+            fetch('/api/messages', {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+                .then(json => {
+                    this.$parent.messages.push(json)
+                });
+
+            this.message = "";
+        }
+    }
 
 }
 </script>
