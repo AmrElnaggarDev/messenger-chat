@@ -2,7 +2,7 @@
     <div class="chat-body hide-scrollbar flex-1 h-100">
         <div class="chat-body-inner">
             <div class="py-6 py-lg-12" id="chat-body">
-                <div v-for="message in messages" v-bind:key="message.id" class="message"  :class="{'message-out': message.user_id == $root.userId}">
+                <div v-for="message in $root.messages" v-bind:key="message.id" class="message"  :class="{'message-out': message.user_id == $root.userId}">
                     <a href="#" data-bs-toggle="modal" data-bs-target="#modal-profile" class="avatar avatar-responsive">
                         <img class="avatar-img" v-bind:src="message.user.avatar_url" alt="">
                     </a>
@@ -75,7 +75,6 @@ export default {
     data() {
         return {
             fetched: 0,
-            messages: [],
         }
     },
 
@@ -84,7 +83,9 @@ export default {
             fetch(`/api/conversations/${this.conversation.id}/messages`)
                 .then(response => response.json())
                 .then(json => {
-                    this.messages = json.messages.data.reverse();
+                    this.$root.messages = json.messages.data.reverse();
+                    let container = document.querySelector('#chat-body');
+                    container.scrollTop = container.scrollHeight;
                 });
         }
 
@@ -96,8 +97,11 @@ export default {
             fetch(`/api/conversations/${this.conversation.id}/messages`)
                 .then(response => response.json())
                 .then(json => {
-                    this.messages = json.messages.data.reverse();
+                    this.$root.messages = json.messages.data.reverse();
                     this.fetched = this.conversation.id;
+
+                    let container = document.querySelector('#chat-body');
+                    container.scrollTop = container.scrollHeight;
                 });
         }
     }
