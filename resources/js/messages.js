@@ -5,13 +5,14 @@ import Messenger from "./components/messages/Messenger.vue";
 import ChatList from "./components/messages/ChatList.vue";
 
 
- import Echo from 'laravel-echo';
+import Echo from 'laravel-echo';
 
- window.Pusher = require('pusher-js');
-
-
+window.Pusher = require('pusher-js');
 
 
+
+
+window.__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
 const chatApp = createApp({
     data() {
         return {
@@ -21,7 +22,8 @@ const chatApp = createApp({
             userId: userId,
             csrfToken: csrf_token,
             laravelEcho: null,
-            users: []
+            users: [],
+            chatChannel: null,
         };
     },
 
@@ -30,54 +32,78 @@ const chatApp = createApp({
             broadcaster: 'pusher',
             key: process.env.MIX_PUSHER_APP_KEY,
             cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-            forceTLS: true
+            forceTLS: true,
+            encrypted: true
         });
 
         this.laravelEcho
-            //.join(`Messenger.${this.userId}`)
-            .join(`Messenger`)
-            .joining( (user) => {
-                for (let i in this.conversations) {
-                    let conversation = this.conversations[i];
-                    if (conversation.participants[0].id === user.id){
-                        console.log(user);
-                         this.conversations[i].participants[0].isOnline = true;
-                        return;
-                    }
-                }
-            })
-            .leaving( (user) => {
-                for (let i in this.conversations) {
-                    let conversation = this.conversations[i];
-                    if (conversation.participants[0].id === user.id){
-                        console.log(user);
-                         this.conversations[i].participants[0].isOnline = true;
-                        return;
-                    }
-                }
-            })
+            .join(`Messenger.${this.userId}`)
             .listen('.new-message', (data) => {
-                alert(data.message.body);
                 this.messages.push(data.message);
-                let container = document.querySelector('#chat-body');
-                container.scrollTop = container.scrollHeight;
+                this.scrollToBottom();
+            });
+
+        this.chatChannel = this.laravelEcho
+            .join('Chat')
+            .joining((user) => {
+                this.updateUserStatus(user.id, true);
+            })
+            .leaving((user) => {
+                this.updateUserStatus(user.id, false);
+            })
+            .listenForWhisper('typing', (e) => {
+                this.setUserTypingStatus(e.id, e.conversation_id, true);
+            })
+            .listenForWhisper('stopped-typing', (e) => {
+                this.setUserTypingStatus(e.id, e.conversation_id, false);
             });
     },
 
     methods: {
         moment(time) {
-            return moment (time);
+            return moment(time);
         },
-        isOnline(user )  {
+        isOnline(user) {
             for (let i in this.users) {
-                if (this.users[i].id === user.id){
+                if (this.users[i].id === user.id) {
                     return this.users[i].isOnline;
                 }
             }
             return false;
         },
+        findUser(id, conversation_id) {
+            for (let i in this.conversations) {
+                let conversation = this.conversations[i];
+                if (conversation.id == conversation_id && conversation.participants[0].id == id) {
+                    return this.conversations[i].participants[0];
+                }
+            }
+        },
+        updateUserStatus(userId, isOnline) {
+            for (let i in this.conversations) {
+                let conversation = this.conversations[i];
+                if (conversation.participants[0].id === userId) {
+                    this.conversations[i].participants[0].isOnline = isOnline;
+                    return;
+                }
+            }
+        },
+        setUserTypingStatus(userId, conversationId, isTyping) {
+            let user = this.findUser(userId, conversationId);
+            if (user) {
+                user.isTyping = isTyping;
+            }
+        },
+        scrollToBottom() {
+            let container = document.querySelector('#chat-body');
+            if (container) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 100);
+            }
+        }
     }
 })
-    chatApp.component('ChatList', ChatList);
-    chatApp.component('Messenger', Messenger);
-    chatApp.mount ('#chat-app');
+chatApp.component('ChatList', ChatList);
+chatApp.component('Messenger', Messenger);
+chatApp.mount('#chat-app');
