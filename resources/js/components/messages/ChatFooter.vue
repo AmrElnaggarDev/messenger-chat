@@ -18,7 +18,7 @@
 
                 <div class="col">
                     <div class="input-group">
-                        <textarea class="form-control px-0" name="message" v-model="message" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
+                        <textarea class="form-control px-0" name="message" v-model="message" @keypress="startTyping()" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
 
                         <a href="#" class="input-group-text text-body pe-0" data-emoji-btn="">
                                                 <span class="icon icon-lg">
@@ -50,10 +50,32 @@ export default {
 
     data() {
         return {
-            message: ""
+            message: "",
+            start_typing: false,
+            timeout: null,
         }
     },
     methods: {
+        startTyping() {
+            if (!this.start_typing) {
+                this.start_typing = true;
+                this.$root.chatChannel.whisper('typing', {
+                    id: this.$root.userId,
+                    conversation_id: this.conversation.id
+                });
+            }
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+            this.timeout = setTimeout(() => {
+                this.start_typing = false;
+                this.$root.chatChannel.whisper('stopped-typing', {
+                    id: this.$root.userId,
+                    conversation_id: this.conversation.id
+                });
+            }, 1000);
+        },
+
         sendMessage() {
 
             let data = {

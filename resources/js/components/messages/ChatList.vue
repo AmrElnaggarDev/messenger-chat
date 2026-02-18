@@ -70,7 +70,7 @@ export default {
 
                 for (let i in json.data) {
                     json.data[i].participants[0].isOnline = false;
-
+                    json.data[i].participants[0].isTyping = false;
                 }
                 this.$root.conversations = json.data;
 

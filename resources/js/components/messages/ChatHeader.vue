@@ -18,13 +18,13 @@
                         <div class="row align-items-center gx-5">
                             <div class="col-auto">
                                 <div class="avatar d-none d-xl-inline-block">
-                                    <img class="avatar-img" id="chat-avatar" v-bind:src="conversation? conversation.participants[0].avatar_url : ''" alt="">
+                                    <img class="avatar-img" id="chat-avatar" v-bind:src=" conversation.participants[0].avatar_url " alt="">
                                 </div>
                             </div>
 
                             <div class="col overflow-hidden">
-                                <h5 class="text-truncate" id="chat-name">{{conversation? conversation.participants[0].name : ''}}</h5>
-                                <p class="text-truncate d-none">35 members, 3 online</p>
+                                <h5 class="text-truncate" id="chat-name">{{ conversation.participants[0].name }}</h5>
+                                <p v-if="conversation.participants[0].isTyping" class="text-truncate">is typing<span class='typing-dots'><span>.</span><span>.</span><span>.</span></span></p>
                             </div>
                         </div>
                     </div>
