@@ -27,6 +27,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('conversations/{conversation}/participants', [ConversationsController::class, 'addParticipant']);
     Route::delete('conversations/{conversation}/participants', [ConversationsController::class, 'removeParticipant']);
 
+    Route::put('conversations/{conversation}/read', [ConversationsController::class, 'markAsRead']);
+
     Route::get('conversations/{id}/messages', [MessagesController::class, 'index']);
     Route::post('messages', [MessagesController::class, 'store'])
     ->name('api.messages.store');

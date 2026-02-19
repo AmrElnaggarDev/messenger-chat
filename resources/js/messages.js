@@ -24,10 +24,15 @@ const chatApp = createApp({
             laravelEcho: null,
             users: [],
             chatChannel: null,
+            alertAudio: new Audio('/assets/mixkit-correct-answer-tone-2870.wav')
         };
     },
 
     mounted() {
+        this.alertAudio.addEventListener('ended', () => {
+            this.alertAudio.currentTime = 0;
+        })
+
         this.laravelEcho = new Echo({
             broadcaster: 'pusher',
             key: process.env.MIX_PUSHER_APP_KEY,
@@ -39,8 +44,37 @@ const chatApp = createApp({
         this.laravelEcho
             .join(`Messenger.${this.userId}`)
             .listen('.new-message', (data) => {
-                this.messages.push(data.message);
-                this.scrollToBottom();
+                let exists = false;
+                for (let i in this.conversations) {
+                    let conversation = this.conversations[i];
+                    if (conversation.id === data.message.conversation_id) {
+                        if (!conversation.hasOwnProperty('new_messages')) {
+                            conversation.new_messages = 0;
+                        }
+                        conversation.new_messages++;
+                        conversation.last_message = data.message;
+                        exists = true;
+                        this.conversations.splice(i, 1);
+                        this.conversations.unshift(conversation);
+
+                        if (this.conversation && this.conversation.id == conversation.id) {
+                            this.messages.push(data.message);
+                            let container = document.querySelector('#chat-body');
+                            container.scrollTop = container.scrollHeight;
+                        }
+                        break;
+                    }
+                }
+                if (!exists) {
+                    fetch(`/api/conversations/${data.message.conversation_id}`)
+                        .then(response => response.json())
+                        .then(json => {
+                            this.conversations.unshift(json)
+                        })
+                }
+
+                this.alertAudio.play();
+
             });
 
         this.chatChannel = this.laravelEcho
@@ -101,6 +135,46 @@ const chatApp = createApp({
                     container.scrollTop = container.scrollHeight;
                 }, 100);
             }
+        },
+
+        markAsRead(conversation = null) {
+            if (conversation == null) {
+                conversation = this.conversation ;
+            }
+            fetch(`/api/conversations/${conversation.id}/read`, {
+                method: 'PUT',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    _token: this.$root.csrfToken
+                })
+            }).then(response => response.json())
+                .then(json => {
+                    conversation.new_messages = 0;
+                })
+        },
+
+        deleteMessage(message) {
+            fetch(`/api/messages/${message.id}`, {
+                method: 'DELETE',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    _token: this.$root.csrfToken
+                })
+            }).then(response => response.json())
+                .then(json => {
+                    // let idx = this.messages.indexOf(message);
+                    // this.messages.splice(idx, 1);
+
+                    message.body = 'Message deleted..';
+                })
         }
     }
 })
