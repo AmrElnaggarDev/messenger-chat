@@ -14,6 +14,8 @@ class Recipient extends Pivot
 
     public $timestamps = false;
 
+    protected $table = 'recipients';
+
     protected $casts = [
         'read_at' => 'datetime',
     ];

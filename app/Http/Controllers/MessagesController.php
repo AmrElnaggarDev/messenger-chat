@@ -24,9 +24,27 @@ class MessagesController extends Controller
             }])
             ->findOrFail($id);
 
+        $messages = $conversation->messages()
+            ->with('user')
+            ->where(function($query) use ($user) {
+                $query
+                    ->where(function($query) use ($user) {
+                        $query->where('user_id', $user->id)
+                            ->whereNull('deleted_at');
+                    })
+                    ->orWhereRaw('id IN (
+                        SELECT message_id FROM recipients
+                        WHERE recipients.message_id = messages.id
+                        AND recipients.user_id = ?
+                        AND recipients.deleted_at IS NULL
+                    )', [$user->id]);
+            })
+            ->latest()
+            ->paginate();
+
         return [
             'conversation' => $conversation,
-            'messages' =>  $conversation->messages()->with('user')->latest()->paginate(),
+            'messages' =>  $messages,
         ];
     }
 
@@ -52,7 +70,7 @@ class MessagesController extends Controller
         ]);
 
           $user = Auth::user();
-//        $user = User::find(1);
+        //$user = User::find(1);
 
         $conversation_id = $request->post('conversation_id');
         $user_id = $request->post('user_id');
@@ -94,10 +112,15 @@ class MessagesController extends Controller
                 'body' => $request->input('message')
             ]);
 
-            DB::statement ('INSERT INTO recipients (user_id, message_id)
-                SELECT user_id, ? FROM participants
-                WHERE conversation_id = ?',
-                [$message->id, $conversation->id]
+            DB::statement('INSERT INTO recipients (user_id, message_id)
+    SELECT user_id, ? FROM participants
+    WHERE conversation_id = ?
+    AND user_id <> ?',
+                [
+                    $message->id,
+                    $conversation->id,
+                    $user->id
+                ]
             );
 
 

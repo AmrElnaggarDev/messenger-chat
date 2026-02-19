@@ -18,7 +18,7 @@
 
                 <div class="col">
                     <div class="input-group">
-                        <textarea class="form-control px-0" name="message" v-model="message" @keypress="startTyping()" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
+                        <textarea class="form-control px-0" name="message" v-model="message" @focus="$root.markAsRead()" @keypress="startTyping()" placeholder="Type your message..." rows="1" data-emoji-input="" data-autosize="true"></textarea>
 
                         <a href="#" class="input-group-text text-body pe-0" data-emoji-btn="">
                                                 <span class="icon icon-lg">

@@ -41,6 +41,10 @@
                                 <div class="line-clamp me-auto">
                                     {{conversation.last_message.body ?? 'No messages yet'}}
                                 </div>
+
+                                <div v-if="conversation.new_messages" class="badge badge-circle bg-primary ms-5">
+                                    <span>{{ conversation.new_messages }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -60,6 +64,7 @@ export default {
     methods: {
         setConversation (conversation) {
             this.$root.conversation = conversation
+            this.$root.markAsRead(conversation);
         }
     },
 
