@@ -15,7 +15,13 @@ use Throwable;
 class MessagesController extends Controller
 {
 
-    public function index($id)
+    /**
+     * Fetch all messages for a specific conversation.
+     *
+     * @param  int  $id
+     * @return array
+     */
+    public function index(int $id): array
     {
         $user = Auth::user();
         $conversation = $user->conversations()
@@ -49,7 +55,13 @@ class MessagesController extends Controller
     }
 
 
-    public function store(Request $request)
+    /**
+     * Store a new message (text or attachment) in a conversation.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \App\Models\Message
+     */
+    public function store(Request $request): \App\Models\Message
     {
         $request->validate([
             'message' => [Rule::requiredIf(function () use ($request) {
@@ -74,8 +86,7 @@ class MessagesController extends Controller
             ],
         ]);
 
-          $user = Auth::user();
-        //$user = User::find(1);
+        $user = Auth::user();
 
         $conversation_id = $request->post('conversation_id');
         $user_id = $request->post('user_id');
@@ -177,7 +188,13 @@ class MessagesController extends Controller
     }
 
 
-    public function destroy($id)
+    /**
+     * Soft-delete a message for the authenticated user.
+     *
+     * @param  int  $id
+     * @return array
+     */
+    public function destroy(int $id): array
     {
         Recipient::where ([
             'user_id' => Auth::id(),

@@ -9,18 +9,21 @@ use Illuminate\Support\Facades\Auth;
 
 class MessengerController extends Controller
 {
-    public function index ($id = null)
+    /**
+     * Display the main messenger interface.
+     *
+     * @param  int|null  $id
+     * @return \Illuminate\View\View
+     */
+    public function index(int $id = null): \Illuminate\View\View
     {
         $user = Auth::user();
-        $friends = User::where ('id', '!=', $user->id)
-            ->orderBy ('name')
+        $friends = User::where('id', '!=', $user->id)
+            ->orderBy('name')
             ->paginate();
 
-
-
-        return view('messenger',[
+        return view('messenger', [
             'friends' => $friends,
-
         ]);
     }
 }

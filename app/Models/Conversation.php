@@ -20,29 +20,54 @@ class Conversation extends Model
         'last_message_id'
     ];
 
+    /**
+     * The users that belong to the conversation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function participants(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'participants')
             ->withPivot('joined_at', 'role');
     }
 
+    /**
+     * Get the messages for the conversation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class, 'conversation_id', 'id');
     }
 
-    public function user() :BelongsTo
+    /**
+     * Get the user that owns the conversation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function lastMessage () :BelongsTo
+    /**
+     * Get the last message in the conversation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function lastMessage(): BelongsTo
     {
         return $this->belongsTo(Message::class, 'last_message_id', 'id')
             ->withDefault();
     }
 
-    public function recipients() :HasManyThrough
+    /**
+     * Get all recipients for the conversation's messages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function recipients(): HasManyThrough
     {
         return $this->hasManyThrough(
             Recipient::class,

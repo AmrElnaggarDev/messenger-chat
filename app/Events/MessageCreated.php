@@ -19,6 +19,12 @@ class MessageCreated implements ShouldBroadcast
 
     public $message;
 
+    /**
+     * Create a new event instance.
+     *
+     * @param  \App\Models\Message  $message
+     * @return void
+     */
     public function __construct(Message $message)
     {
         $this->message = $message;
@@ -29,16 +35,21 @@ class MessageCreated implements ShouldBroadcast
      *
      * @return \Illuminate\Broadcasting\Channel|array
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel|array
     {
-
         $other_user = $this->message->conversation->participants()
-            ->where ('user_id', '<>', Auth::id())
+            ->where('user_id', '<>', Auth::id())
             ->first();
-        return new presenceChannel('Messenger.' . $other_user->id);
+
+        return new PresenceChannel('Messenger.' . $other_user->id);
     }
 
-    public function broadcastAs ()
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs(): string
     {
         return 'new-message';
     }
