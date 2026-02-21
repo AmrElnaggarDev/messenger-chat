@@ -6,12 +6,12 @@
         <!-- Chat: Files -->
 
         <!-- Chat: Form -->
-        <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="/api/messages" @submit.prevent="sendMessage()">
+        <form class="chat-form rounded-pill bg-dark" data-emoji-form="" method="post" action="/api/messages" @submit.prevent="sendMessage()"  >
             <input type="hidden" name="_token" :value="$root.csrfToken">
             <input type="hidden" name="conversation_id" :value="conversation? conversation.id : 0">
             <div class="row align-items-center gx-0">
                 <div class="col-auto">
-                    <a href="#" class="btn btn-icon btn-link text-body rounded-circle" id="dz-btn">
+                    <a href="#" @click.prevent="selectFile()" class="btn btn-icon btn-link text-body rounded-circle" id="dz-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-paperclip"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
                     </a>
                 </div>
@@ -51,6 +51,7 @@ export default {
     data() {
         return {
             message: "",
+            attachment: "",
             start_typing: false,
             timeout: null,
         }
@@ -79,17 +80,26 @@ export default {
         sendMessage() {
 
             let data = {
-                conversation_id: this.conversation.id,
+                conversation_id: this.$root.conversation.id,
                 message: this.message,
                 _token: this.$root.csrfToken,
             }
+
+            let formData = new FormData();
+            formData.append('conversation_id', this.$root.conversation.id);
+            formData.append('message', this.message);
+            formData.append('_token', this.$root.csrfToken);
+            if (this.attachment){
+                formData.append('attachment', this.attachment);
+            }
+
+
             fetch('/api/messages', {
                 method: 'POST',
-                mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Accept': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: formData
             })
             .then(response => response.json())
                 .then(json => {
@@ -100,6 +110,22 @@ export default {
                 });
 
             this.message = "";
+            this.attachment = null;
+        },
+
+        selectFile () {
+            let fileElm = document.createElement('input', {});
+            fileElm.setAttribute('type', 'file');
+
+            fileElm.addEventListener('change', () => {
+                if (fileElm.files.length === 0) {
+                    return;
+                }
+                this.attachment = fileElm.files[0];
+                this.sendMessage();
+            });
+
+            fileElm.click();
         }
     }
 

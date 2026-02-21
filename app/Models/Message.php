@@ -16,6 +16,10 @@ class Message extends Model
         'conversation_id', 'user_id', 'body', 'type'
     ];
 
+    protected $casts = [
+        'body' => 'json'
+    ];
+
     public function conversation () :belongsTo
     {
         return $this->belongsTo(Conversation::class);
@@ -35,4 +39,3 @@ class Message extends Model
             ->withPivot('read_at', 'deleted_at');
     }
 }
-
