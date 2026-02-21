@@ -15,21 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-
-
-
-//// Home redirects based on auth
-//Route::get('/', function () {
-//    return auth()->check()
-//        ? redirect()->route('messenger')
-//        : redirect()->route('login');
-//});
-
-
-
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

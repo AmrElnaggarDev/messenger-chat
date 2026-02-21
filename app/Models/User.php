@@ -48,7 +48,12 @@ class User extends Authenticatable
         'avatar_url',
     ];
 
-    public function conversations () : BelongsToMany
+    /**
+     * Get the conversations that the user belongs to.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function conversations(): BelongsToMany
     {
         return $this
             ->belongsToMany(Conversation::class, 'participants')
@@ -56,18 +61,33 @@ class User extends Authenticatable
             ->withPivot('joined_at', 'role');
     }
 
-    public function sentMessages () : HasMany
+    /**
+     * Get the messages sent by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function sentMessages(): HasMany
     {
        return $this->hasMany(Message::class, 'user_id', 'id');
     }
 
-    public function receivedMessages () :BelongsToMany
+    /**
+     * Get the messages received by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function receivedMessages(): BelongsToMany
     {
         return $this->belongsToMany(Message::class, 'recipients')
             ->withPivot('read_at', 'deleted_at');
     }
 
-    public function getAvatarUrlAttribute()
+    /**
+     * Get the user's avatar URL.
+     *
+     * @return string
+     */
+    public function getAvatarUrlAttribute(): string
     {
         return 'https://ui-avatars.com/api/?background=0D8ABC&color=fff&name=' .$this->name;
     }

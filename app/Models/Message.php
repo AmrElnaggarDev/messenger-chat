@@ -20,12 +20,22 @@ class Message extends Model
         'body' => 'json'
     ];
 
-    public function conversation () :belongsTo
+    /**
+     * Get the conversation that owns the message.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function conversation(): BelongsTo
     {
         return $this->belongsTo(Conversation::class);
     }
 
-    public function user () :BelongsTo
+    /**
+     * Get the user that sent the message.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class)
             ->withDefault([
@@ -33,7 +43,12 @@ class Message extends Model
             ]);
     }
 
-    public function recipients() :BelongsToMany
+    /**
+     * Get the recipients for the message.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function recipients(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'recipients')
             ->withPivot('read_at', 'deleted_at');
