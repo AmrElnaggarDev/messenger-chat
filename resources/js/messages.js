@@ -76,6 +76,20 @@ const chatApp = createApp({
 
                 this.alertAudio.play();
 
+            })
+            .listen('.message-read', (data) => {
+                if (this.conversation && this.conversation.id == data.conversation_id) {
+                    this.messages.forEach(message => {
+                        if (message.user_id == this.userId) {
+                            message.recipients.forEach(recipient => {
+                                if (recipient.id == data.user_id) {
+                                    if (!recipient.pivot) recipient.pivot = {};
+                                    recipient.pivot.read_at = new Date().toISOString();
+                                }
+                            });
+                        }
+                    });
+                }
             });
 
         this.chatChannel = this.laravelEcho

@@ -31,7 +31,7 @@ class MessagesController extends Controller
             ->findOrFail($id);
 
         $messages = $conversation->messages()
-            ->with('user')
+            ->with(['user', 'recipients'])
             ->where(function($query) use ($user) {
                 $query
                     ->where(function($query) use ($user) {
@@ -161,7 +161,7 @@ class MessagesController extends Controller
 
             DB::commit();
 
-            $message->load('user');
+            $message->load(['user', 'recipients']);
             broadcast(new MessageCreated($message));
 
         }
