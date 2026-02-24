@@ -83,6 +83,7 @@
 
                         <div class="message-footer">
                             <span class="extra-small text-muted">{{$root.moment(message.created_at).fromNow()}}</span>
+                            <span v-if="message.user_id == $root.userId && isSeen(message)" class="extra-small text-primary ms-2">Seen</span>
                         </div>
                     </div>
                 </div>
@@ -101,6 +102,13 @@ export default {
     data() {
         return {
             fetched: 0,
+        }
+    },
+
+    methods: {
+        isSeen(message) {
+            if (!message.recipients) return false;
+            return message.recipients.some(recipient => recipient.pivot && recipient.pivot.read_at);
         }
     },
 

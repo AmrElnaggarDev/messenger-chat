@@ -18,6 +18,7 @@ A high-performance, real-time messaging application built with **Laravel 9** and
 - **✍️ Typing Indicators**: Live "User is typing..." indicators for enhanced user engagement.
 - **🟢 Online status**: Real-time presence indicators to see who is currently active.
 - **🔍 Instant Search & Filter**: Find conversations and messages instantly with real-time filtering.
+- **✓✓ Read Receipts**: Real-time "Seen" indicators for messages across peer-to-peer chats.
 - **🕒 Message History**: Efficient loading of message history with scrollable chat windows.
 - **🗑️ Message Security**: Option to delete messages (soft-delete for user view).
 

@@ -104,6 +104,8 @@ class ConversationsController extends Controller
             [$id])
             ->update(['read_at' => Carbon::now()]);
 
+        broadcast(new \App\Events\MessageRead($id));
+
         return [
             'message' => 'Messages marked as read'
         ];
