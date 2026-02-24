@@ -16,6 +16,7 @@ A high-performance, real-time messaging application built with **Laravel 9** and
 - **👥 Conversation Management**: Support for private (peer-to-peer) and group chat architectures.
 - **🔔 Unread Notifications**: Real-time unread message counters and "Mark as Read" functionality.
 - **✍️ Typing Indicators**: Live "User is typing..." indicators for enhanced user engagement.
+- **🟢 Online status**: Real-time presence indicators to see who is currently active.
 - **🕒 Message History**: Efficient loading of message history with scrollable chat windows.
 - **🗑️ Message Security**: Option to delete messages (soft-delete for user view).
 - **🔍 User Discovery**: Searchable friends list to start new conversations instantly.

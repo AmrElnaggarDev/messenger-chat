@@ -26,7 +26,7 @@
                 <div class="card-body">
                     <div class="row gx-5">
                         <div class="col-auto">
-                            <div class="avatar" :class="{'avatar-online' : conversation.participants[0].isOnline }">
+                            <div class="avatar" :class="{'avatar-online' : $root.isOnline(conversation.participants[0].id) }">
                                 <img v-bind:src="conversation.participants[0].avatar_url" alt="" srcset="">
                             </div>
                         </div>
@@ -72,17 +72,8 @@ export default {
         fetch('/api/conversations')
             .then(response => response.json())
             .then(json => {
-
-                for (let i in json.data) {
-                    json.data[i].participants[0].isOnline = false;
-                    json.data[i].participants[0].isTyping = false;
-                }
                 this.$root.conversations = json.data;
-
             })
     }
 }
-</script>
-
-
 
