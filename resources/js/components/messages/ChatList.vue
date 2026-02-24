@@ -8,7 +8,7 @@
 
         <!-- Search -->
         <div class="mb-6">
-            <form action="#">
+            <form action="#" @submit.prevent>
                 <div class="input-group">
                     <div class="input-group-text">
                         <div class="icon icon-lg">
@@ -16,13 +16,13 @@
                         </div>
                     </div>
 
-                    <input type="text" class="form-control form-control-lg ps-0" placeholder="Search messages or users" aria-label="Search for messages or users...">
+                    <input v-model="searchQuery" type="text" class="form-control form-control-lg ps-0" placeholder="Search messages or users" aria-label="Search for messages or users...">
                 </div>
             </form>
         </div>
 
         <div class="card-list"  id="chat-list">
-            <a v-for="conversation in $root.conversations" v-bind:key="conversation.id" v-bind:href="'#' + conversation.id"  @click.prevent="setConversation(conversation)"  class="card border-0 text-reset">
+            <a v-for="conversation in filteredConversations" v-bind:key="conversation.id" v-bind:href="'#' + conversation.id"  @click.prevent="setConversation(conversation)"  class="card border-0 text-reset">
                 <div class="card-body">
                     <div class="row gx-5">
                         <div class="col-auto">
@@ -50,6 +50,9 @@
                     </div>
                 </div>
             </a>
+            <div v-if="filteredConversations.length === 0" class="text-center py-8">
+                <p class="text-muted">No conversations found.</p>
+            </div>
         </div>
     </div>
 </template>
@@ -58,7 +61,25 @@
 export default {
     data() {
         return {
+            searchQuery: '',
         };
+    },
+
+    computed: {
+        filteredConversations() {
+            const query = this.searchQuery.toLowerCase().trim();
+            if (!query) {
+                return this.$root.conversations;
+            }
+            return this.$root.conversations.filter(conversation => {
+                const name = conversation.participants[0].name.toLowerCase();
+                const lastMessage = (conversation.last_message.type === 'attachment'
+                    ? conversation.last_message.body.file_name
+                    : conversation.last_message.body).toLowerCase();
+
+                return name.includes(query) || lastMessage.includes(query);
+            });
+        }
     },
 
     methods: {
@@ -77,3 +98,4 @@ export default {
     }
 }
 
+</script>
