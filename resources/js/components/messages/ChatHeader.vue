@@ -17,7 +17,7 @@
                     <div class="col-12 col-xl-6">
                         <div class="row align-items-center gx-5">
                             <div class="col-auto">
-                                <div class="avatar d-none d-xl-inline-block">
+                                <div class="avatar d-none d-xl-inline-block" :class="{'avatar-online' : $root.isOnline(conversation.participants[0].id) }">
                                     <img class="avatar-img" id="chat-avatar" v-bind:src=" conversation.participants[0].avatar_url " alt="">
                                 </div>
                             </div>

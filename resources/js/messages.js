@@ -23,6 +23,7 @@ const chatApp = createApp({
             csrfToken: csrf_token,
             laravelEcho: null,
             users: [],
+            onlineUserIds: [], // Track online user IDs
             chatChannel: null,
             alertAudio: new Audio('/assets/mixkit-correct-answer-tone-2870.wav')
         };
@@ -79,11 +80,16 @@ const chatApp = createApp({
 
         this.chatChannel = this.laravelEcho
             .join('Chat')
+            .here((users) => {
+                this.onlineUserIds = users.map(u => u.id);
+            })
             .joining((user) => {
-                this.updateUserStatus(user.id, true);
+                if (!this.onlineUserIds.includes(user.id)) {
+                    this.onlineUserIds.push(user.id);
+                }
             })
             .leaving((user) => {
-                this.updateUserStatus(user.id, false);
+                this.onlineUserIds = this.onlineUserIds.filter(id => id !== user.id);
             })
             .listenForWhisper('typing', (e) => {
                 this.setUserTypingStatus(e.id, e.conversation_id, true);
@@ -97,28 +103,14 @@ const chatApp = createApp({
         moment(time) {
             return moment(time);
         },
-        isOnline(user) {
-            for (let i in this.users) {
-                if (this.users[i].id === user.id) {
-                    return this.users[i].isOnline;
-                }
-            }
-            return false;
+        isOnline(userId) {
+            return this.onlineUserIds.includes(userId);
         },
         findUser(id, conversation_id) {
             for (let i in this.conversations) {
                 let conversation = this.conversations[i];
                 if (conversation.id == conversation_id && conversation.participants[0].id == id) {
                     return this.conversations[i].participants[0];
-                }
-            }
-        },
-        updateUserStatus(userId, isOnline) {
-            for (let i in this.conversations) {
-                let conversation = this.conversations[i];
-                if (conversation.participants[0].id === userId) {
-                    this.conversations[i].participants[0].isOnline = isOnline;
-                    return;
                 }
             }
         },
@@ -139,7 +131,7 @@ const chatApp = createApp({
 
         markAsRead(conversation = null) {
             if (conversation == null) {
-                conversation = this.conversation ;
+                conversation = this.conversation;
             }
             fetch(`/api/conversations/${conversation.id}/read`, {
                 method: 'PUT',

@@ -3211,28 +3211,5 @@
 <script src="{{asset('js/messages.js')}}"></script>
 
 
-{{--
-
-<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-
-<script>
-// Enable pusher logging - don't include this in production
-Pusher.logToConsole = true;
-
-var pusher = new Pusher('b1784b1b99e4d8e19b15', {
-  cluster: 'ap2',
-    authEndpoint: "/broadcasting/auth",
-});
-
-var channel = pusher.subscribe(`presence-Messenger.${userId}`);
-channel.bind('new-message', function(data) {
-    addMessage(data.message);
-});
-
-
-</script>
---}}
-
-
 </body>
 </html>
