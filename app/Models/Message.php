@@ -17,7 +17,8 @@ class Message extends Model
     ];
 
     protected $casts = [
-        'body' => 'json'
+        'body' => 'json',
+        'edited_at' => 'datetime',
     ];
 
     /**

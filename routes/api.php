@@ -31,6 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('conversations/{id}/messages', [MessagesController::class, 'index']);
     Route::post('messages', [MessagesController::class, 'store'])
-    ->name('api.messages.store');
+        ->name('api.messages.store');
+    Route::put('messages/{id}', [MessagesController::class, 'update']);
     Route::delete('messages/{id}', [MessagesController::class, 'destroy']);
 });
