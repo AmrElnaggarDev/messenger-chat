@@ -10,17 +10,30 @@
                     <div class="message-inner">
                         <div class="message-body">
                             <div class="message-content">
-                                <div class="message-text" v-if="message.type==='text'">
+                                <!-- Deleted placeholder -->
+                                <div class="message-text text-muted fst-italic" v-if="message.deleted_at">
+                                    <p>Message deleted..</p>
+                                </div>
+
+                                <!-- Normal text view -->
+                                <div class="message-text" v-if="!message.deleted_at && message.type==='text' && !message.isEditing">
                                     <p>{{ message.body }}</p>
                                 </div>
-                                <div class="message-gallery" v-if="message.type==='attachment' && message.body.mimetype.match(/image\/.+/)">
+
+                                <!-- Edit view -->
+                                <div class="message-text" v-if="!message.deleted_at && message.type==='text' && message.isEditing">
+                                    <textarea class="form-control mb-2" v-model="message.editBody"></textarea>
+                                    <button class="btn btn-sm btn-primary me-2" @click.prevent="$root.updateMessage(message)">Save</button>
+                                    <button class="btn btn-sm btn-secondary" @click.prevent="$root.cancelEdit(message)">Cancel</button>
+                                </div>
+                                <div class="message-gallery" v-if="!message.deleted_at && message.type==='attachment' && message.body.mimetype.match(/image\/.+/)">
                                     <div class="row gx-3">
                                         <div class="col">
                                             <img class="img-fluid rounded" v-bind:src="'/storage/'+message.body.file_path" data-action="zoom" alt="">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="message-text" v-if="message.type==='attachment' && !message.body.mimetype.match(/image\/.+/)">
+                                <div class="message-text" v-if="!message.deleted_at && message.type==='attachment' && !message.body.mimetype.match(/image\/.+/)">
                                     <div class="row align-items-center gx-4">
                                         <div class="col-auto">
                                             <a v-bind:href="'/storage/'+message.body.file_path" class="avatar avatar-sm">
@@ -47,11 +60,11 @@
                                         </a>
 
                                         <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                            <li v-if="message.user_id == $root.userId">
+                                                <a class="dropdown-item d-flex align-items-center" href="#" @click.prevent="$root.beginEdit(message)">
                                                     <span class="me-auto">Edit</span>
                                                     <div class="icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-3"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                                        <!-- icon SVG stays the same -->
                                                     </div>
                                                 </a>
                                             </li>
@@ -59,18 +72,18 @@
                                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                                     <span class="me-auto">Reply</span>
                                                     <div class="icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-up-left"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+                                                        <!-- icon SVG stays the same -->
                                                     </div>
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li v-if="message.user_id == $root.userId">
                                                 <hr class="dropdown-divider">
                                             </li>
-                                            <li>
+                                            <li v-if="message.user_id == $root.userId">
                                                 <a class="dropdown-item d-flex align-items-center text-danger" href="#">
                                                     <span class="me-auto" @click.prevent="$root.deleteMessage(message)">Delete</span>
                                                     <div class="icon">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                                        <!-- icon SVG stays the same -->
                                                     </div>
                                                 </a>
                                             </li>
@@ -82,7 +95,10 @@
                         </div>
 
                         <div class="message-footer">
-                            <span class="extra-small text-muted">{{$root.moment(message.created_at).fromNow()}}</span>
+                            <span class="extra-small text-muted">
+                                {{$root.moment(message.created_at).fromNow()}}
+                                <span v-if="message.edited_at"> · edited</span>
+                            </span>
                             <span v-if="message.user_id == $root.userId && isSeen(message)" class="extra-small text-primary ms-2">Seen</span>
                         </div>
                     </div>

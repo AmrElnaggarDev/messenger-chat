@@ -90,6 +90,21 @@ const chatApp = createApp({
                         }
                     });
                 }
+            })
+            .listen('.message-updated', (data) => {
+                const updated = data.message;
+                const msg = this.messages.find(m => m.id === updated.id);
+                if (msg) {
+                    msg.body = updated.body;
+                    msg.edited_at = updated.edited_at;
+                }
+            })
+            .listen('.message-deleted', (data) => {
+                const deleted = data.message;
+                const msg = this.messages.find(m => m.id === deleted.id);
+                if (msg) {
+                    msg.deleted_at = deleted.deleted_at;
+                }
             });
 
         this.chatChannel = this.laravelEcho
@@ -176,12 +191,54 @@ const chatApp = createApp({
                 })
             }).then(response => response.json())
                 .then(json => {
-                    // let idx = this.messages.indexOf(message);
-                    // this.messages.splice(idx, 1);
-
-                    message.body = 'Message deleted..';
+                    if (json.message === 'deleted_for_everyone') {
+                        // mark as deleted so both sides can show placeholder
+                        message.deleted_at = new Date().toISOString();
+                    } else {
+                        // delete for me only: remove from local list
+                        const idx = this.messages.indexOf(message);
+                        if (idx !== -1) {
+                            this.messages.splice(idx, 1);
+                        }
+                    }
                 })
-        }
+        },
+        beginEdit(message) {
+            if (message.type !== 'text') {
+                return;
+            }
+            // reset any other editing flags
+            this.messages.forEach(m => {
+                m.isEditing = false;
+            });
+            message.isEditing = true;
+            message.editBody = message.body;
+        },
+
+        cancelEdit(message) {
+            message.isEditing = false;
+        },
+
+        updateMessage(message) {
+            fetch(`/api/messages/${message.id}`, {
+                method: 'PUT',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    _token: this.csrfToken,
+                    message: message.editBody,
+                }),
+            })
+                .then(response => response.json())
+                .then(json => {
+                    message.body = json.body;
+                    message.edited_at = json.edited_at;
+                    message.isEditing = false;
+                });
+        },
     }
 })
 chatApp.component('ChatList', ChatList);

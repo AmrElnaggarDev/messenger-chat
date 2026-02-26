@@ -20,7 +20,7 @@ A high-performance, real-time messaging application built with **Laravel 9** and
 - **🔍 Instant Search & Filter**: Find conversations and messages instantly with real-time filtering.
 - **✓✓ Read Receipts**: Real-time "Seen" indicators for messages across peer-to-peer chats.
 - **🕒 Message History**: Efficient loading of message history with scrollable chat windows.
-- **🗑️ Message Security**: Option to delete messages (soft-delete for user view).
+- **🗂️ Message Management**: Edit sent text messages with an “edited” label and delete messages either for everyone (soft delete with a “Message deleted..” placeholder) or just for yourself, all synchronized in real time via Laravel Echo and Vue.js reactivity.
 
 ---
 

@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageCreated;
+use App\Events\MessageDeleted;
+use App\Events\MessageUpdated;
 use App\Models\Conversation;
+use App\Models\Message;
 use App\Models\Recipient;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -31,6 +35,7 @@ class MessagesController extends Controller
             ->findOrFail($id);
 
         $messages = $conversation->messages()
+            ->withTrashed()
             ->with(['user', 'recipients'])
             ->where(function($query) use ($user) {
                 $query
@@ -182,9 +187,36 @@ class MessagesController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): Message
     {
-        //
+        // 1) Validate input
+        $validated = $request->validate([
+            'message' => ['required', 'string'],
+        ]);
+
+        $userId = Auth::id();
+
+        // 2) Find the message that belongs to the current user
+        $message = Message::where('id', $id)
+            ->where('user_id', $userId)
+            ->firstOrFail();
+
+        // 3) Only allow editing text messages (not attachments)
+        if ($message->type !== 'text') {
+            abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'Only text messages can be edited.');
+        }
+
+        // 4) Update body and edited_at
+        $message->body = $validated['message'];
+        $message->edited_at = now();
+        $message->save();
+
+        // 5) Load relations so frontend has everything it expects
+        $message->load(['user', 'recipients', 'conversation.participants']);
+
+        broadcast(new MessageUpdated($message));
+
+        return $message;
     }
 
 
@@ -196,9 +228,31 @@ class MessagesController extends Controller
      */
     public function destroy(int $id): array
     {
-        Recipient::where ([
-            'user_id' => Auth::id(),
-            'message_id' => $id
+        $userId = Auth::id();
+
+        // Find the message (or fail with 404)
+        $message = Message::findOrFail($id);
+
+        // CASE 1: current user is the author → soft delete for everyone
+        if ($message->user_id === $userId) {
+            // Soft delete the message row (sets messages.deleted_at)
+            $message->delete();
+
+            // Optionally also delete all recipient rows
+            Recipient::where('message_id', $id)->delete();
+
+            $message->load(['user', 'recipients', 'conversation.participants']);
+            broadcast(new MessageDeleted($message));
+
+            return [
+                'message' => 'deleted_for_everyone',
+            ];
+        }
+
+        // CASE 2: current user is just a recipient → delete only for this user
+        Recipient::where([
+            'user_id' => $userId,
+            'message_id' => $id,
         ])->delete();
 
         return [
