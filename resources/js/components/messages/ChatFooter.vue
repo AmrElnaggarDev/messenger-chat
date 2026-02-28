@@ -101,16 +101,22 @@ export default {
                 },
                 body: formData
             })
-            .then(response => response.json())
+                .then(response => {
+                    if (response.status === 429) {
+                        alert('You\'re sending too fast. Please wait a moment.');
+                        return null;
+                    }
+                    return response.json();
+                })
                 .then(json => {
-                    this.$root.messages.push(json);
-
-                    let container = document.querySelector('#chat-body');
-                    container.scrollTop = container.scrollHeight;
+                    if (json) {
+                        this.$root.messages.push(json);
+                        let container = document.querySelector('#chat-body');
+                        container.scrollTop = container.scrollHeight;
+                        this.message = "";
+                        this.attachment = null;
+                    }
                 });
-
-            this.message = "";
-            this.attachment = null;
         },
 
         selectFile () {
